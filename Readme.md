@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Maxim Ditenberg](https://up.htmlacademy.ru/ecmascript/11/user/1052739).
-* Наставник: `Неизвестно`.
+* Наставник: [Артем Брилев](https://htmlacademy.ru/profile/id1126425).
 
 ---
 
