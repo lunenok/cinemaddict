@@ -1,5 +1,3 @@
-"use strict";
-
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -14,7 +12,7 @@ const createProfileTemplate = () => {
       <p class="profile__rating">Movie Buff</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`
-  )
+  );
 };
 
 const createMenuTemplate = () => {
@@ -28,7 +26,7 @@ const createMenuTemplate = () => {
       </div>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`
-  )
+  );
 };
 
 const createSortingTemplate = () => {
@@ -38,14 +36,14 @@ const createSortingTemplate = () => {
       <li><a href="#" class="sort__button">Sort by date</a></li>
       <li><a href="#" class="sort__button">Sort by rating</a></li>
     </ul>`
-  )
+  );
 };
 
 const createMainBoardTemplate = () => {
   return (
     `<section class="films">
     </section>`
-  )
+  );
 };
 
 const createFilmsListTemplate = () => {
@@ -55,7 +53,7 @@ const createFilmsListTemplate = () => {
       <div class="films-list__container">
       </div>
     </section>`
-  )
+  );
 };
 
 const createFilmCardTemplate = () => {
@@ -77,13 +75,13 @@ const createFilmCardTemplate = () => {
         <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
       </form>
     </article>`
-  )
+  );
 };
 
 const createShowMoreButtonTemplate = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
-  )
+  );
 };
 
 const createTopRatedFilmsListTemplate = () => {
@@ -93,7 +91,7 @@ const createTopRatedFilmsListTemplate = () => {
       <div class="films-list__container">
       </div>
     </section>`
-  )
+  );
 };
 
 const createMostCommentedFilmsListTemplate = () => {
@@ -104,7 +102,7 @@ const createMostCommentedFilmsListTemplate = () => {
       </div>
     </section>
     `
-  )
+  );
 };
 
 // Рендер управления и главной доски
@@ -129,15 +127,15 @@ const mostCommentedListElement = document.querySelector(`.films-list--commented`
 
 for (let i = 0; i < MOVIE_CARD_COUNT; i++) {
   render(filmsContainerElement, createFilmCardTemplate());
-};
+}
 
 for (let i = 0; i < TOP_RATED_MOVIE_CARD_COUNT; i++) {
   render(topRatedListElement, createFilmCardTemplate());
-};
+}
 
 for (let i = 0; i < MOST_COMMENTED_MOVIE_CARD_COUNT; i++) {
   render(mostCommentedListElement, createFilmCardTemplate());
-};
+}
 
 render(filmsListElement, createShowMoreButtonTemplate());
 
