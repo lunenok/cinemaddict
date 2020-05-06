@@ -7,6 +7,11 @@ import {createTopRatedFilmsListTemplate} from "./components/top-rated-list.js";
 import {createMostCommentedFilmsListTemplate} from "./components/most-commented-list.js";
 import {createFilmCardTemplate} from "./components/film-card.js";
 import {createShowMoreButtonTemplate} from "./components/show-more-button.js";
+import {generateMovies} from "./mock/mock.js";
+import {calculateFilters} from "./utils.js";
+
+export const Movies = generateMovies(15);
+const filtersCount = calculateFilters(Movies);
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -20,7 +25,7 @@ const MOST_COMMENTED_MOVIE_CARD_COUNT = 2;
 const siteHeaderElement = document.querySelector(`header`);
 const siteMainElement = document.querySelector(`.main`);
 render(siteHeaderElement, createProfileTemplate());
-render(siteMainElement, createMenuTemplate());
+render(siteMainElement, createMenuTemplate(filtersCount));
 render(siteMainElement, createSortingTemplate());
 render(siteMainElement, createMainBoardTemplate());
 
@@ -36,17 +41,31 @@ const filmsContainerElement = filmsListElement.querySelector(`.films-list__conta
 const topRatedListElement = document.querySelector(`.films-list--top`).querySelector(`.films-list__container`);
 const mostCommentedListElement = document.querySelector(`.films-list--commented`).querySelector(`.films-list__container`);
 
-for (let i = 0; i < MOVIE_CARD_COUNT; i++) {
-  render(filmsContainerElement, createFilmCardTemplate());
-}
+let showingMoviesCount = MOVIE_CARD_COUNT;
 
-for (let i = 0; i < TOP_RATED_MOVIE_CARD_COUNT; i++) {
-  render(topRatedListElement, createFilmCardTemplate());
-}
-
-for (let i = 0; i < MOST_COMMENTED_MOVIE_CARD_COUNT; i++) {
-  render(mostCommentedListElement, createFilmCardTemplate());
-}
+Movies.slice(0, showingMoviesCount)
+  .forEach((movie) => render(filmsContainerElement, createFilmCardTemplate(movie), `beforeend`));
 
 render(filmsListElement, createShowMoreButtonTemplate());
 
+const showMoreButton = filmsListElement.querySelector(`.films-list__show-more`);
+
+showMoreButton.addEventListener(`click`, () => {
+  const prevMoviesCount = showingMoviesCount;
+  showingMoviesCount = showingMoviesCount + MOVIE_CARD_COUNT;
+
+  Movies.slice(prevMoviesCount, showingMoviesCount)
+    .forEach((movie) => render(filmsContainerElement, createFilmCardTemplate(movie), `beforeend`));
+
+  if (showingMoviesCount >= Movies.length) {
+    showMoreButton.remove();
+  }
+});
+
+for (let i = 0; i < TOP_RATED_MOVIE_CARD_COUNT; i++) {
+  render(topRatedListElement, createFilmCardTemplate(Movies[2]));
+}
+
+for (let i = 0; i < MOST_COMMENTED_MOVIE_CARD_COUNT; i++) {
+  render(mostCommentedListElement, createFilmCardTemplate(Movies[3]));
+}
