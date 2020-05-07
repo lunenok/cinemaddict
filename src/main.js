@@ -7,6 +7,7 @@ import {createTopRatedFilmsListTemplate} from "./components/top-rated-list.js";
 import {createMostCommentedFilmsListTemplate} from "./components/most-commented-list.js";
 import {createFilmCardTemplate} from "./components/film-card.js";
 import {createShowMoreButtonTemplate} from "./components/show-more-button.js";
+import {createFilmDetailsTemplate} from "./components/film-details.js";
 import {generateMovies} from "./mock/mock.js";
 import {calculateFilters} from "./utils.js";
 
@@ -69,3 +70,5 @@ for (let i = 0; i < TOP_RATED_MOVIE_CARD_COUNT; i++) {
 for (let i = 0; i < MOST_COMMENTED_MOVIE_CARD_COUNT; i++) {
   render(mostCommentedListElement, createFilmCardTemplate(Movies[3]));
 }
+
+render(siteMainElement, createFilmDetailsTemplate(Movies[1]));

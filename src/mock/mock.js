@@ -31,11 +31,11 @@ const Descriptions = [
 ];
 
 const Genres = [
-  `Comedy`,
-  `Drama`,
-  `Adventure`,
-  `History`,
-  `Musical`
+  [`Comedy`, `Horror`],
+  [`Drama`, `Thriller`],
+  [`Adventure`],
+  [`History`, `Adventure`],
+  [`Musical`, `History`]
 ];
 
 const CommentText = [
@@ -56,7 +56,7 @@ const generateDescription = () => {
 const generateComment = () => {
   return {
     author: `Ilya O'Reilly`,
-    comment: getRandomElement(CommentText),
+    text: getRandomElement(CommentText),
     date: `2019-05-11T16:12:32.554Z`,
     emotion: `smile`
   };
@@ -90,12 +90,12 @@ const generateMovie = () => {
     rating: getRandomIntegerNumber(1, 10),
     ageRating: getRandomIntegerNumber(14, 18),
     director: `Tom Ford`,
-    writers: `Takeshi Kitano`,
+    writers: [`Takeshi Kitano`, `Edward Norton`],
     actors: [`Morgan Freeman`, `Clint Eastwood`],
     realeseDate: getRandomIntegerNumber(1940, 1999),
     realeseCountry: `USA`,
     runtime: getRandomIntegerNumber(70, 130),
-    genre: getRandomElement(Genres),
+    genres: getRandomElement(Genres),
     description: generateDescription(),
     commentsCount: 3,
     comments: generateComments(3),
