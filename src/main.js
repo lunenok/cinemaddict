@@ -38,10 +38,31 @@ const filmsContainerElement = filmsListElement.querySelector(`.films-list__conta
 const topRatedListElement = document.querySelector(`.films-list--top`).querySelector(`.films-list__container`);
 const mostCommentedListElement = document.querySelector(`.films-list--commented`).querySelector(`.films-list__container`);
 
+const renderMovie = (movie) => {
+  const onMovieCardClick = () => {
+    render(siteMainElement, filmDetailsComponent.getElement(), RenderPosition.BEFOREEND);
+  };
+
+  const onCloseButtonClick = () => {
+    filmDetailsComponent.getElement().remove();
+    filmDetailsComponent.removeElement();
+  }; // В задании просят реализовать через removeChild и appendChild.
+
+  const filmCardComponent = new FilmCardComponent(movie);
+  const movieCardPoster = filmCardComponent.getElement().querySelector(`.film-card__poster`);
+  movieCardPoster.addEventListener(`click`, onMovieCardClick);
+
+  const filmDetailsComponent = new FilmDetailsComponent(movie);
+  const closeButton = filmDetailsComponent.getElement().querySelector(`.film-details__close`);
+  closeButton.addEventListener(`click`, onCloseButtonClick);
+
+  render(filmsContainerElement, filmCardComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
 let showingMoviesCount = MOVIE_CARD_COUNT;
 
 Movies.slice(0, showingMoviesCount)
-  .forEach((movie) => render(filmsContainerElement, new FilmCardComponent(movie).getElement(), RenderPosition.BEFOREEND));
+  .forEach((movie) => renderMovie(movie));
 
 render(filmsListElement, new ShowMoreButtonComponent().getElement(), RenderPosition.BEFOREEND);
 
@@ -52,7 +73,7 @@ showMoreButton.addEventListener(`click`, () => {
   showingMoviesCount = showingMoviesCount + MOVIE_CARD_COUNT;
 
   Movies.slice(prevMoviesCount, showingMoviesCount)
-    .forEach((movie) => render(filmsContainerElement, new FilmCardComponent(movie).getElement(), RenderPosition.BEFOREEND));
+    .forEach((movie) => renderMovie(movie));
 
   if (showingMoviesCount >= Movies.length) {
     showMoreButton.remove();
@@ -67,4 +88,3 @@ for (let i = 0; i < MOST_COMMENTED_MOVIE_CARD_COUNT; i++) {
   render(mostCommentedListElement, new FilmCardComponent(Movies[3]).getElement(), RenderPosition.BEFOREEND);
 }
 
-render(siteMainElement, new FilmDetailsComponent(Movies[1]).getElement, RenderPosition.BEFOREEND);
