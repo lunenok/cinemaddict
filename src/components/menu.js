@@ -1,3 +1,5 @@
+import {createElement} from "./../utils.js";
+
 export const createMenuTemplate = (counts) => {
   const {watchlist, history, favorite} = counts;
 
@@ -13,3 +15,27 @@ export const createMenuTemplate = (counts) => {
     </nav>`
   );
 };
+
+export default class Menu {
+  constructor(task) {
+    this._task = task;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMenuTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

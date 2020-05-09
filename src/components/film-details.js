@@ -1,3 +1,5 @@
+import {createElement} from "./../utils.js";
+
 const createCommentTemplate = (comment) => {
   const {author, text, date, emotion} = comment;
 
@@ -32,7 +34,7 @@ const createGenresTemplate = (genres) => {
   .join(`\n`);
 };
 
-export const createFilmDetailsTemplate = (movie) => {
+const createFilmDetailsTemplate = (movie) => {
   const {title, rating, director, writers, actors, realeseCountry, genres, commentsCount, description, poster, comments} = movie;
 
   const _writers = writers.join(`, `);
@@ -158,3 +160,27 @@ export const createFilmDetailsTemplate = (movie) => {
     </section>`
   );
 };
+
+export default class FilmDetails {
+  constructor(task) {
+    this._task = task;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
