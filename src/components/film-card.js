@@ -25,14 +25,14 @@ const createFilmCardTemplate = (movie) => {
 };
 
 export default class FilmCard {
-  constructor(task) {
-    this._task = task;
+  constructor(movie) {
+    this._movie = movie;
 
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._task);
+    return createFilmCardTemplate(this._movie);
   }
 
   getElement() {

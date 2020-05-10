@@ -11,14 +11,12 @@ export const createTopRatedFilmsListTemplate = () => {
 };
 
 export default class TopRatedFilmsList {
-  constructor(task) {
-    this._task = task;
-
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createTopRatedFilmsListTemplate(this._task);
+    return createTopRatedFilmsListTemplate();
   }
 
   getElement() {

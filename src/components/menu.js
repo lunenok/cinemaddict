@@ -17,14 +17,14 @@ export const createMenuTemplate = (counts) => {
 };
 
 export default class Menu {
-  constructor(task) {
-    this._task = task;
+  constructor(counts) {
+    this._counts = counts;
 
     this._element = null;
   }
 
   getTemplate() {
-    return createMenuTemplate(this._task);
+    return createMenuTemplate(this._counts);
   }
 
   getElement() {

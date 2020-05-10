@@ -12,14 +12,12 @@ export const createMostCommentedFilmsListTemplate = () => {
 };
 
 export default class MostCommentedFilmsList {
-  constructor(task) {
-    this._task = task;
-
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMostCommentedFilmsListTemplate(this._task);
+    return createMostCommentedFilmsListTemplate();
   }
 
   getElement() {

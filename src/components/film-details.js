@@ -162,14 +162,14 @@ const createFilmDetailsTemplate = (movie) => {
 };
 
 export default class FilmDetails {
-  constructor(task) {
-    this._task = task;
+  constructor(movie) {
+    this._movie = movie;
 
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._task);
+    return createFilmDetailsTemplate(this._movie);
   }
 
   getElement() {
