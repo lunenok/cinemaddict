@@ -7,14 +7,12 @@ export const createShowMoreButtonTemplate = () => {
 };
 
 export default class ShowMoreButton {
-  constructor(task) {
-    this._task = task;
-
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createShowMoreButtonTemplate(this._task);
+    return createShowMoreButtonTemplate();
   }
 
   getElement() {

@@ -1,23 +1,24 @@
 import {createElement} from "./../utils.js";
 
-export const createMainBoardTemplate = () => {
+const createNoFilmsTemplate = () => {
   return (
-    `<section class="films">
+    `<section class="films-list">
+      <h2 class="films-list__title">There are no movies in our database</h2>
     </section>`
   );
 };
 
-export default class MainBoard {
+export default class NoFilms {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMainBoardTemplate();
+    return createNoFilmsTemplate();
   }
 
   getElement() {
-    if (!this._element) {
+    if (!this.element) {
       this._element = createElement(this.getTemplate());
     }
 

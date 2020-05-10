@@ -10,14 +10,12 @@ export const createProfileTemplate = () => {
 };
 
 export default class Profile {
-  constructor(task) {
-    this._task = task;
-
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createProfileTemplate(this._task);
+    return createProfileTemplate();
   }
 
   getElement() {

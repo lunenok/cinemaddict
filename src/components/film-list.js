@@ -11,14 +11,12 @@ export const createFilmsListTemplate = () => {
 };
 
 export default class FilmsList {
-  constructor(task) {
-    this._task = task;
-
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmsListTemplate(this._task);
+    return createFilmsListTemplate();
   }
 
   getElement() {
