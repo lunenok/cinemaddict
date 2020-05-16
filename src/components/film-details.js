@@ -1,4 +1,4 @@
-import {createElement} from "./../utils.js";
+import AbstarctComponent from "./abstract-component.js";
 
 const createCommentTemplate = (comment) => {
   const {author, text, date, emotion} = comment;
@@ -161,26 +161,13 @@ const createFilmDetailsTemplate = (movie) => {
   );
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstarctComponent {
   constructor(movie) {
+    super();
     this._movie = movie;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._movie);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

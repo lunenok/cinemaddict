@@ -1,4 +1,4 @@
-import {createElement} from "./../utils.js";
+import AbstarctComponent from "./abstract-component.js";
 
 export const createMainBoardTemplate = () => {
   return (
@@ -7,24 +7,8 @@ export const createMainBoardTemplate = () => {
   );
 };
 
-export default class MainBoard {
-  constructor() {
-    this._element = null;
-  }
-
+export default class MainBoard extends AbstarctComponent {
   getTemplate() {
     return createMainBoardTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
