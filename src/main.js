@@ -28,6 +28,37 @@ render(siteMainElement, new MenuComponent(filtersCount), RenderPosition.BEFOREEN
 render(siteMainElement, new SortingComponent(), RenderPosition.BEFOREEND);
 render(siteMainElement, new MainBoardComponent(), RenderPosition.BEFOREEND);
 
+const renderMovie = (listComponent, movie) => {
+  const filmCardComponent = new FilmCardComponent(movie);
+  const movieCardPoster = filmCardComponent.getElement().querySelector(`.film-card__poster`);
+
+  const filmDetailsComponent = new FilmDetailsComponent(movie);
+
+  const onCloseButtonClick = () => {
+    remove(filmDetailsComponent);
+  };
+
+  const onMovieCardClick = () => {
+    const closeButton = filmDetailsComponent.getElement().querySelector(`.film-details__close`);
+    render(siteMainElement, filmDetailsComponent, RenderPosition.BEFOREEND);
+    document.addEventListener(`keydown`, onEscKeyDown);
+    closeButton.addEventListener(`click`, onCloseButtonClick);
+  };
+
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      remove(filmDetailsComponent);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  movieCardPoster.addEventListener(`click`, onMovieCardClick);
+
+  render(listComponent, filmCardComponent, RenderPosition.BEFOREEND);
+};
+
 const renderBoard = (movies) => {
   const mainBoardElement = document.querySelector(`.films`);
 
