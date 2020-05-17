@@ -1,4 +1,4 @@
-import AbstarctComponent from "./abstract-component.js";
+import AbstractComponent from "./abstract-component.js";
 
 export const createMainBoardTemplate = () => {
   return (
@@ -7,7 +7,7 @@ export const createMainBoardTemplate = () => {
   );
 };
 
-export default class MainBoard extends AbstarctComponent {
+export default class MainBoard extends AbstractComponent {
   getTemplate() {
     return createMainBoardTemplate();
   }
