@@ -33,4 +33,9 @@ export default class FilmCard extends AbstarctComponent {
   getTemplate() {
     return createFilmCardTemplate(this._movie);
   }
+
+  setPosterClickHandler(handler) {
+    const movieCardPoster = this.getElement().querySelector(`.film-card__poster`);
+    movieCardPoster.addEventListener(`click`, handler);
+  }
 }
