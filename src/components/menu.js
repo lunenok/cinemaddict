@@ -1,4 +1,4 @@
-import {createElement} from "./../utils.js";
+import AbstarctComponent from "./abstract-component.js";
 
 export const createMenuTemplate = (counts) => {
   const {watchlist, history, favorite} = counts;
@@ -16,26 +16,13 @@ export const createMenuTemplate = (counts) => {
   );
 };
 
-export default class Menu {
+export default class Menu extends AbstarctComponent {
   constructor(counts) {
+    super();
     this._counts = counts;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createMenuTemplate(this._counts);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

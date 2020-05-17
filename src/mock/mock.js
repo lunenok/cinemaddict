@@ -1,4 +1,4 @@
-import {getRandomBoolean, getRandomIntegerNumber, getRandomElement, generateRandomDate} from "./../utils.js";
+import {getRandomBoolean, getRandomIntegerNumber, getRandomElement, generateRandomDate} from "../utils/common.js";
 
 const DESCRIPTION_COUNT = 5;
 
