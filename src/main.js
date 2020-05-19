@@ -1,6 +1,5 @@
 import ProfileComponent from "./components/profile.js";
 import MenuComponent from "./components/menu.js";
-import SortingComponent from "./components/sorting.js";
 import MainBoardComponent from "./components/main-board.js";
 import PageController from "./controllers/page.js";
 import {generateMovies} from "./mock/mock.js";
@@ -16,10 +15,9 @@ const siteMainElement = document.querySelector(`.main`);
 const mainBoardComponent = new MainBoardComponent();
 const profileComponent = new ProfileComponent();
 const menuComponent = new MenuComponent(filtersCount);
-const sortingComponent = new SortingComponent();
+
 render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, menuComponent, RenderPosition.BEFOREEND);
-render(siteMainElement, sortingComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, mainBoardComponent, RenderPosition.BEFOREEND);
 
 const pageController = new PageController(mainBoardComponent);
