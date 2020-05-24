@@ -114,8 +114,6 @@ export default class PageController {
       });
     };
 
-    renderLoadMoreButton();
-
     this._sortingComponent.setSortTypeChangeHandler((sortType) => {
       showingMoviesCount = MOVIE_CARD_COUNT;
       const sortedMovies = getSortedMovies(movies, sortType);
@@ -127,6 +125,8 @@ export default class PageController {
 
       renderLoadMoreButton();
     });
+
+    renderLoadMoreButton();
 
     for (let i = 0; i < TOP_RATED_MOVIE_CARD_COUNT; i++) {
       renderMovie(topRatedList, movies[2]);
