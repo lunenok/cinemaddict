@@ -1,4 +1,4 @@
-import AbstarctComponent from "./abstract-component.js";
+import SmartAbstarctComponent from "./smart-abstract-component.js";
 
 const createCommentTemplate = (comment) => {
   const {author, text, date, emotion} = comment;
@@ -20,6 +20,13 @@ const createCommentTemplate = (comment) => {
   );
 };
 
+const getCheckedStatus = (status) => {
+  if (status) {
+    return `checked`;
+  }
+  return null;
+};
+
 const createCommentsTemplate = (comments) => {
   return comments.map((comment) => {
     return createCommentTemplate(comment);
@@ -35,7 +42,7 @@ const createGenresTemplate = (genres) => {
 };
 
 const createFilmDetailsTemplate = (movie) => {
-  const {title, rating, director, writers, actors, realeseCountry, genres, commentsCount, description, poster, comments} = movie;
+  const {title, rating, director, writers, actors, realeseCountry, genres, commentsCount, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
 
   const _writers = writers.join(`, `);
   const _actors = actors.join(`, `);
@@ -106,13 +113,13 @@ const createFilmDetailsTemplate = (movie) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${getCheckedStatus(isToWatch)}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${getCheckedStatus(isWatched)}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${getCheckedStatus(isFavorite)}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -161,18 +168,41 @@ const createFilmDetailsTemplate = (movie) => {
   );
 };
 
-export default class FilmDetails extends AbstarctComponent {
+export default class FilmDetails extends SmartAbstarctComponent {
   constructor(movie) {
     super();
     this._movie = movie;
+    this._setCloseButtonClickHandler = null;
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._movie);
   }
 
+  recoveryListeners() {
+    this.setCloseButtonClickHandler(this._setCloseButtonClickHandler);
+  }
+
+
   setCloseButtonClickHandler(handler) {
     const closeButton = this.getElement().querySelector(`.film-details__close`);
     closeButton.addEventListener(`click`, handler);
+
+    this._setCloseButtonClickHandler = handler;
+  }
+
+  setWatchlistClickHandler(handler) {
+    const watchListButton = this.getElement().querySelector(`input[name="watchlist"]`);
+    watchListButton.addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandler(handler) {
+    const watchedButton = this.getElement().querySelector(`input[name="watched"]`);
+    watchedButton.addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    const favoriteButton = this.getElement().querySelector(`input[name="favorite"]`);
+    favoriteButton.addEventListener(`click`, handler);
   }
 }

@@ -37,6 +37,7 @@ export default class MovieController {
 
     this._filmCardComponent.setPosterClickHandler(showPopup);
 
+    // Обработчик нажатия по карточке //
     this._filmCardComponent.setFavoriteClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
@@ -57,7 +58,32 @@ export default class MovieController {
         isToWatch: !movie.isToWatch,
       }));
     });
+    // Закончился обработчик нажатия по карточке //
+
+    // Обработчик нажатий в попапе //
+    this._filmDetailsComponent.setFavoriteClickHandler(() => {
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        isFavorite: !movie.isFavorite,
+      }));
+    });
+
+    this._filmDetailsComponent.setWatchedClickHandler(() => {
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        isWatched: !movie.isWatched,
+      }));
+    });
+
+    this._filmDetailsComponent.setWatchlistClickHandler(() => {
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        isToWatch: !movie.isToWatch,
+      }));
+    });
+    // Закончился обработчик нажатий в попапе //
 
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
+
+  // remove() {
+  //   this._filmCardComponent.getElement().remove();
+  // }
 }

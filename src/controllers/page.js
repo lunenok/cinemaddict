@@ -78,6 +78,8 @@ export default class PageController {
         return;
       }
 
+      remove(this._showMoreButtonComponent);
+
       render(this._filmsListComponent.getElement(), this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
       this._showMoreButtonComponent.setClickHandler(() => {
@@ -126,7 +128,7 @@ export default class PageController {
     }
 
     this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
-
+    // movieController.remove();
     movieController.render(this._movies[index]);
   }
 }

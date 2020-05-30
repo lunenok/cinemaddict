@@ -1,4 +1,4 @@
-import AbstarctComponent from "./abstract-component.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createFilmCardTemplate = (movie) => {
   const {title, rating, realeseDate, genres, commentsCount, description, poster, isFavorite, isWatched, isToWatch} = movie;
@@ -31,7 +31,7 @@ const createFilmCardTemplate = (movie) => {
   );
 };
 
-export default class FilmCard extends AbstarctComponent {
+export default class FilmCard extends AbstractComponent {
   constructor(movie) {
     super();
     this._movie = movie;
