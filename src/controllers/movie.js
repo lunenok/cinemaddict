@@ -83,7 +83,7 @@ export default class MovieController {
     render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
 
-  // remove() {
-  //   this._filmCardComponent.getElement().remove();
-  // }
+  remove() {
+    this._filmCardComponent.getElement().remove();
+  }
 }
