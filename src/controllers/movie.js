@@ -119,4 +119,10 @@ export default class MovieController {
   remove() {
     this._filmCardComponent.getElement().remove();
   }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
 }

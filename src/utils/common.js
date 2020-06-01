@@ -37,13 +37,13 @@ export const generateRandomDate = (start, end) => {
 
 export const calculateFilters = (movies) => {
   const watchlistCount = movies.filter((movie) => {
-    return movie.userDetails.watchlist === true;
+    return movie.isToWatch === true;
   }).length;
   const historyCount = movies.filter((movie) => {
-    return movie.userDetails.alreadyWatched === true;
+    return movie.isWatched === true;
   }).length;
   const favoriteCount = movies.filter((movie) => {
-    return movie.userDetails.favorite === true;
+    return movie.isFavorite === true;
   }).length;
 
   return {

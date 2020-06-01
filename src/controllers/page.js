@@ -63,6 +63,8 @@ export default class PageController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._moviesModel.setFilterChangeHandler(this._onFilterChange);
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
 
     this._container = container;
@@ -94,6 +96,21 @@ export default class PageController {
 
     renderMovies(topRatedList, getTopRatedMovies(movies), 0, TOP_RATED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
     renderMovies(mostCommentedList, getMostCommentedMovies(movies), 0, MOST_COMMENTED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
+  }
+
+  _removeMovies() {
+    this._showedMoviesControllers.forEach((movieController) => movieController.destroy());
+    this._showedTaskControllers = [];
+  }
+
+  _updateMovies(count) {
+    this._removeMovies();
+    this._renderTasks(this._moviesModel.getMovies().slice(0, count));
+    this._renderLoadMoreButton();
+  }
+
+  _onFilterChange() {
+    this._updateMovies(MOVIE_CARD_COUNT);
   }
 
   _renderLoadMoreButton() {
