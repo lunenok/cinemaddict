@@ -2,10 +2,16 @@ import FilmDetailsComponent from "./../components/film-details.js";
 import FilmCardComponent from "./../components/film-card.js";
 import {render, RenderPosition, remove, replace} from "./../utils/render.js";
 
+const Mode = {
+  DEFAULT: `default`,
+  POPUP: `popup`,
+};
 export default class MovieController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
+    this._mode = Mode.DEFAULT;
+    this._onViewChange = onViewChange;
     this._onDataChange = onDataChange;
 
     this._container = container;
@@ -22,6 +28,8 @@ export default class MovieController {
     const showPopup = () => {
       render(siteMainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
       this._setPopUpHandlers(movie);
+      this._mode = Mode.POPUP;
+      this._onViewChange();
     };
 
     this._filmCardComponent.setPosterClickHandler(showPopup);
@@ -65,6 +73,7 @@ export default class MovieController {
       const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
       if (isEscKey) {
+        this._mode = Mode.DEFAULT;
         remove(this._filmDetailsComponent);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
@@ -75,6 +84,7 @@ export default class MovieController {
     const onCloseButtonClick = () => {
       remove(this._filmDetailsComponent);
       this._filmDetailsComponent.reset();
+      this._mode = Mode.DEFAULT;
     };
 
     this._filmDetailsComponent.setCloseButtonClickHandler(onCloseButtonClick);
@@ -96,6 +106,12 @@ export default class MovieController {
         isToWatch: !movie.isToWatch,
       }));
     });
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this.remove();
+    }
   }
 
   remove() {
