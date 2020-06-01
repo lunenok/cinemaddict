@@ -1,15 +1,36 @@
 import AbstarctComponent from "./abstract-component.js";
+import {FilterType} from "./../const.js";
 
-export const createMenuTemplate = (counts) => {
-  const {watchlist, history, favorite} = counts;
+const getFilterNameById = (id) => {
+  // return id.split(` `)[0].toUpperCase();
+  return id;
+};
 
+const createFilterMarkup = (filter) => {
+  const {name, count, checked} = filter;
+
+  const createCountMarkup = () => {
+    if (name !== FilterType.ALL) {
+      return (
+        `<span class="main-navigation__item-count">${count}</span>`
+      );
+    } else {
+      return ``;
+    }
+  };
+
+  return (
+    `<a href="#" id="${name}" class="main-navigation__item ${checked ? `main-navigation__item--active` : null}">${name}${createCountMarkup()}</a>
+    `
+  );
+};
+
+export const createMenuTemplate = (filters) => {
+  const filtersMarkup = filters.map((it) => createFilterMarkup(it)).join(`\n`);
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
-        <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-        <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${watchlist}</span></a>
-        <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${history}</span></a>
-        <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${favorite}</span></a>
+        ${filtersMarkup}
       </div>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`
@@ -17,12 +38,23 @@ export const createMenuTemplate = (counts) => {
 };
 
 export default class Menu extends AbstarctComponent {
-  constructor(counts) {
+  constructor(filters) {
     super();
-    this._counts = counts;
+    this._filters = filters;
   }
 
   getTemplate() {
-    return createMenuTemplate(this._counts);
+    return createMenuTemplate(this._filters);
   }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
+      const filterName = getFilterNameById(evt.target.id);
+      handler(filterName);
+    });
+  }
+
 }

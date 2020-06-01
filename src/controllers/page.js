@@ -56,7 +56,6 @@ export default class PageController {
     this._sortingComponent = new SortingComponent();
     this._showingMoviesCount = MOVIE_CARD_COUNT;
     this._moviesModel = moviesModel;
-    // this._movies = [];
     this._showedMoviesControllers = [];
     this._filmsContainerElement = this._filmsListComponent.getElement().querySelector(`.films-list__container`);
 
@@ -100,12 +99,13 @@ export default class PageController {
 
   _removeMovies() {
     this._showedMoviesControllers.forEach((movieController) => movieController.destroy());
-    this._showedTaskControllers = [];
+    this._showedMoviesControllers = [];
   }
 
   _updateMovies(count) {
     this._removeMovies();
-    this._renderTasks(this._moviesModel.getMovies().slice(0, count));
+    const newMovies = renderMovies(this._filmsContainerElement, this._moviesModel.getMovies(), 0, count, this._onDataChange, this._onViewChange);
+    this._showedMoviesControllers = this._showedMoviesControllers.concat(newMovies);
     this._renderLoadMoreButton();
   }
 
@@ -116,6 +116,7 @@ export default class PageController {
   _renderLoadMoreButton() {
     const movies = this._moviesModel.getMovies();
     if (this._showingMoviesCount >= movies.length) {
+      remove(this._showMoreButtonComponent);
       return;
     }
 
@@ -123,14 +124,13 @@ export default class PageController {
 
     render(this._filmsListComponent.getElement(), this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-
     this._showMoreButtonComponent.setClickHandler(() => {
       const prevMoviesCount = this._showingMoviesCount;
       this._showingMoviesCount = this._showingMoviesCount + MOVIE_CARD_COUNT;
 
       const sortedMovies = getSortedMovies(movies, this._sortingComponent.getSortType());
       const newMovies = renderMovies(this._filmsContainerElement, sortedMovies, prevMoviesCount, this._showingMoviesCount, this._onDataChange, this._onViewChange);
-      this._showedMoviesControllers = this._showedMoviesControllers.concat(newMovies); // не работает
+      this._showedMoviesControllers = this._showedMoviesControllers.concat(newMovies);
 
       if (this._showingMoviesCount >= movies.length) {
         remove(this._showMoreButtonComponent);
@@ -145,7 +145,7 @@ export default class PageController {
     this._filmsContainerElement.innerHTML = ``;
 
     const newMovies = renderMovies(this._filmsContainerElement, sortedMovies, 0, this._showingMoviesCount, this._onDataChange, this._onViewChange);
-    this._showedMoviesControllers = newMovies; // не работает
+    this._showedMoviesControllers = newMovies;
 
     this._renderLoadMoreButton();
   }

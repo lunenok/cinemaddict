@@ -1,5 +1,5 @@
-import Filter from "../components/menu.js";
-import FilterType from "../const.js";
+import Menu from "../components/menu.js";
+import {FilterType} from "../const.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
 import {getMoviesByFilter} from "../utils/filter.js";
 
@@ -31,18 +31,18 @@ export default class FilterController {
 
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new Filter(filters);
+    this._filterComponent = new Menu(filters);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
-      render(container, this._filterComponent, RenderPosition.BEFOREEND);
+      render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
     }
   }
 
   _onFilterChange(filterType) {
-    this._tasksModel.setFilter(filterType);
+    this._moviesModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }
 
