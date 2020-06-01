@@ -99,7 +99,10 @@ const generateMovie = () => {
     description: generateDescription(),
     commentsCount: 3,
     comments: generateComments(3),
-    userDetails: generateUserDetails()
+    userDetails: generateUserDetails(),
+    isFavorite: getRandomBoolean(),
+    isWatched: getRandomBoolean(),
+    isToWatch: getRandomBoolean()
   };
 };
 
