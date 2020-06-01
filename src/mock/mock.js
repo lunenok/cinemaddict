@@ -85,6 +85,7 @@ const generateUserDetails = () => {
 const generateMovie = () => {
   const index = getRandomIntegerNumber(0, 6);
   return {
+    id: String(new Date() + Math.random()),
     title: Movies[index],
     poster: Posters[index],
     rating: getRandomIntegerNumber(1, 10),

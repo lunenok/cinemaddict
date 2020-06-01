@@ -28,8 +28,8 @@ export default class MovieController {
     const showPopup = () => {
       render(siteMainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
       this._setPopUpHandlers(movie);
-      this._mode = Mode.POPUP;
       this._onViewChange();
+      this._mode = Mode.POPUP;
     };
 
     this._filmCardComponent.setPosterClickHandler(showPopup);
@@ -110,7 +110,9 @@ export default class MovieController {
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this.remove();
+      this._mode = Mode.DEFAULT;
+      remove(this._filmDetailsComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
 

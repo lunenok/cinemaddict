@@ -2,11 +2,12 @@ import ProfileComponent from "./components/profile.js";
 import MenuComponent from "./components/menu.js";
 import MainBoardComponent from "./components/main-board.js";
 import PageController from "./controllers/page.js";
+import MoviesModel from "./models/movie.js";
 import {generateMovies} from "./mock/mock.js";
 import {calculateFilters} from "./utils/common.js";
 import {render, RenderPosition} from "./utils/render.js";
 
-export const Movies = generateMovies(15);
+const Movies = generateMovies(15);
 const filtersCount = calculateFilters(Movies);
 
 // Рендер управления и главной доски
@@ -20,5 +21,7 @@ render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, menuComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, mainBoardComponent, RenderPosition.BEFOREEND);
 
-const pageController = new PageController(mainBoardComponent);
-pageController.render(Movies);
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(Movies);
+const pageController = new PageController(mainBoardComponent, moviesModel);
+pageController.render();
