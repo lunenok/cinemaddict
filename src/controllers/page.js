@@ -30,6 +30,14 @@ const getSortedMovies = (movies, sortType) => {
   return sortedMovies;
 };
 
+const getTopRatedMovies = (movies) => {
+  return movies.sort((a, b) => b.rating - a.rating);
+};
+
+const getMostCommentedMovies = (movies) => {
+  return movies.sort((a, b) => b.comments.lenght - a.comments.lenght);
+};
+
 const renderMovies = (container, movies, from, to, onDataChange, onViewChange) => {
   movies.slice(from, to).map((movie) => {
     const movieController = new MovieController(container, onDataChange, onViewChange);
@@ -83,16 +91,8 @@ export default class PageController {
 
     this._renderLoadMoreButton();
 
-    for (let i = 0; i < TOP_RATED_MOVIE_CARD_COUNT; i++) {
-      const movieController = new MovieController(topRatedList);
-      movieController.render(this._movies[2]);
-    }
-
-    for (let i = 0; i < MOST_COMMENTED_MOVIE_CARD_COUNT; i++) {
-      const movieController = new MovieController(mostCommentedList);
-      movieController.render(this._movies[1]);
-    }
-
+    renderMovies(topRatedList, getTopRatedMovies(this._movies), 0, TOP_RATED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
+    renderMovies(mostCommentedList, getMostCommentedMovies(this._movies), 0, MOST_COMMENTED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
   }
 
   _renderLoadMoreButton() {
