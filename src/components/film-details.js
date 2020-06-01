@@ -1,4 +1,11 @@
-import SmartAbstarctComponent from "./smart-abstract-component.js";
+import SmartAbstractComponent from "./smart-abstract-component.js";
+
+export const EMOJIS = [
+  `smile`,
+  `sleeping`,
+  `puke`,
+  `angry`
+];
 
 const createCommentTemplate = (comment) => {
   const {author, text, date, emotion} = comment;
@@ -41,7 +48,12 @@ const createGenresTemplate = (genres) => {
   .join(`\n`);
 };
 
-const createFilmDetailsTemplate = (movie) => {
+const createAddEmojiMarkup = (emotion) => {
+  return emotion ? `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">` : ``;
+};
+
+
+const createFilmDetailsTemplate = (movie, emotion) => {
   const {title, rating, director, writers, actors, realeseCountry, genres, commentsCount, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
 
   const _writers = writers.join(`, `);
@@ -133,7 +145,9 @@ const createFilmDetailsTemplate = (movie) => {
             </ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label">
+                ${createAddEmojiMarkup(emotion)}
+              </div>
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -168,41 +182,70 @@ const createFilmDetailsTemplate = (movie) => {
   );
 };
 
-export default class FilmDetails extends SmartAbstarctComponent {
-  constructor(movie) {
+export default class FilmDetails extends SmartAbstractComponent {
+  constructor(movie, handler) {
     super();
     this._movie = movie;
+    this._emotion = ``;
     this._setCloseButtonClickHandler = null;
+    this._setWatchlistClickHandler = null;
+    this._setWatchedClickHandler = null;
+    this._setFavoriteClickHandler = null;
+
+    this._handler = handler;
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._movie);
+    return createFilmDetailsTemplate(this._movie, this._emotion);
   }
 
   recoveryListeners() {
     this.setCloseButtonClickHandler(this._setCloseButtonClickHandler);
+    this.setWatchlistClickHandler(this._setWatchlistClickHandler);
+    this.setWatchedClickHandler(this._setWatchedClickHandler);
+    this.setFavoriteClickHandler(this._setFavoriteClickHandler);
+    this._subscribeOnEvents();
   }
 
+  rerender() {
+    super.rerender();
+  }
 
   setCloseButtonClickHandler(handler) {
     const closeButton = this.getElement().querySelector(`.film-details__close`);
     closeButton.addEventListener(`click`, handler);
-
     this._setCloseButtonClickHandler = handler;
   }
 
   setWatchlistClickHandler(handler) {
     const watchListButton = this.getElement().querySelector(`input[name="watchlist"]`);
     watchListButton.addEventListener(`click`, handler);
+    this._setWatchlistClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
     const watchedButton = this.getElement().querySelector(`input[name="watched"]`);
     watchedButton.addEventListener(`click`, handler);
+    this._setWatchedClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
     const favoriteButton = this.getElement().querySelector(`input[name="favorite"]`);
     favoriteButton.addEventListener(`click`, handler);
+    this._setFavoriteClickHandler = handler;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+    element.querySelector(`.film-details__emoji-list`).addEventListener(`change`, (evt) => {
+      this._emotion = evt.target.value;
+      this.rerender();
+    });
+  }
+
+  reset() {
+    this._emotion = ``;
+    this.rerender();
   }
 }

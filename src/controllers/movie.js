@@ -1,6 +1,6 @@
 import FilmDetailsComponent from "./../components/film-details.js";
 import FilmCardComponent from "./../components/film-card.js";
-import {render, RenderPosition, remove} from "./../utils/render.js";
+import {render, RenderPosition, remove, replace} from "./../utils/render.js";
 
 export default class MovieController {
   constructor(container, onDataChange) {
@@ -12,32 +12,32 @@ export default class MovieController {
   }
 
   render(movie) {
+    const oldFilmCardComponent = this._filmCardComponent;
+    const oldFilmDetailsComponent = this._filmDetailsComponent;
+
     const siteMainElement = document.querySelector(`.main`);
     this._filmCardComponent = new FilmCardComponent(movie);
     this._filmDetailsComponent = new FilmDetailsComponent(movie);
 
-    const onCloseButtonClick = () => {
-      remove(this._filmDetailsComponent);
-    };
-
     const showPopup = () => {
       render(siteMainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-      document.addEventListener(`keydown`, onEscKeyDown);
-      this._filmDetailsComponent.setCloseButtonClickHandler(onCloseButtonClick);
-    };
-
-    const onEscKeyDown = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-      if (isEscKey) {
-        remove(this._filmDetailsComponent);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
+      this._setPopUpHandlers(movie);
     };
 
     this._filmCardComponent.setPosterClickHandler(showPopup);
 
-    // Обработчик нажатия по карточке //
+    if (oldFilmCardComponent && oldFilmDetailsComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
+      replace(this._filmDetailsComponent, oldFilmDetailsComponent);
+    } else {
+      render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+    }
+
+    this._setCardHandlers(movie);
+    this._setPopUpHandlers(movie);
+  }
+
+  _setCardHandlers(movie) {
     this._filmCardComponent.setFavoriteClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
@@ -58,9 +58,27 @@ export default class MovieController {
         isToWatch: !movie.isToWatch,
       }));
     });
-    // Закончился обработчик нажатия по карточке //
+  }
 
-    // Обработчик нажатий в попапе //
+  _setPopUpHandlers(movie) {
+    const onEscKeyDown = (evt) => {
+      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+      if (isEscKey) {
+        remove(this._filmDetailsComponent);
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    document.addEventListener(`keydown`, onEscKeyDown);
+
+    const onCloseButtonClick = () => {
+      remove(this._filmDetailsComponent);
+      this._filmDetailsComponent.reset();
+    };
+
+    this._filmDetailsComponent.setCloseButtonClickHandler(onCloseButtonClick);
+
     this._filmDetailsComponent.setFavoriteClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isFavorite: !movie.isFavorite,
@@ -78,9 +96,6 @@ export default class MovieController {
         isToWatch: !movie.isToWatch,
       }));
     });
-    // Закончился обработчик нажатий в попапе //
-
-    render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
 
   remove() {
