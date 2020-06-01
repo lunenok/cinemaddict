@@ -92,7 +92,7 @@ const generateMovie = () => {
     director: `Tom Ford`,
     writers: [`Takeshi Kitano`, `Edward Norton`],
     actors: [`Morgan Freeman`, `Clint Eastwood`],
-    realeseDate: getRandomIntegerNumber(1940, 1999),
+    realeseDate: generateRandomDate(new Date(2000, 0, 1), new Date()),
     realeseCountry: `USA`,
     runtime: getRandomIntegerNumber(70, 130),
     genres: getRandomElement(Genres),

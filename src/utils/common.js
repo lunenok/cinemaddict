@@ -1,3 +1,22 @@
+import moment from "moment";
+
+export const formatDuration = (mins) => {
+  const duration = moment.duration(mins, `minutes`);
+  return moment.utc(duration.as(`milliseconds`)).format(`H[h] mm[m]`);
+};
+
+export const formatYear = (date) => {
+  return moment(date).format(`YYYY`);
+};
+
+export const formatDate = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
+};
+
+export const formatCommentDate = (date) => {
+  return moment(date).fromNow();
+};
+
 export const getRandomBoolean = () => {
   return Math.random() > 0.5;
 };

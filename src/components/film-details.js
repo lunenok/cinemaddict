@@ -1,4 +1,5 @@
 import SmartAbstractComponent from "./smart-abstract-component.js";
+import {formatDuration, formatDate, formatCommentDate} from "./../utils/common.js";
 
 export const EMOJIS = [
   `smile`,
@@ -9,6 +10,7 @@ export const EMOJIS = [
 
 const createCommentTemplate = (comment) => {
   const {author, text, date, emotion} = comment;
+  const _date = formatCommentDate(date);
 
   return (
     `<li class="film-details__comment">
@@ -19,7 +21,7 @@ const createCommentTemplate = (comment) => {
         <p class="film-details__comment-text">${text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${date}</span>
+          <span class="film-details__comment-day">${_date}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -54,10 +56,13 @@ const createAddEmojiMarkup = (emotion) => {
 
 
 const createFilmDetailsTemplate = (movie, emotion) => {
-  const {title, rating, director, writers, actors, realeseCountry, genres, commentsCount, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
+  const {title, rating, director, writers, actors, realeseDate, realeseCountry, genres, runtime, commentsCount, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
 
   const _writers = writers.join(`, `);
   const _actors = actors.join(`, `);
+
+  const _runtime = formatDuration(runtime);
+  const _realeseDate = formatDate(realeseDate);
 
   return (
     `<section class="film-details">
@@ -100,11 +105,11 @@ const createFilmDetailsTemplate = (movie, emotion) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">30 March 1945</td>
+                  <td class="film-details__cell">${_realeseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">1h 18m</td>
+                  <td class="film-details__cell">${_runtime}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

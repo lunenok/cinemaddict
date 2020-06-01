@@ -1,7 +1,10 @@
 import AbstractComponent from "./abstract-component.js";
+import {formatDuration, formatYear} from "./../utils/common.js";
 
 const createFilmCardTemplate = (movie) => {
-  const {title, rating, realeseDate, genres, commentsCount, description, poster, isFavorite, isWatched, isToWatch} = movie;
+  const {title, rating, realeseDate, genres, commentsCount, description, poster, runtime, isFavorite, isWatched, isToWatch} = movie;
+  const _runtime = formatDuration(runtime);
+  const _realeseDate = formatYear(realeseDate);
 
   const getActiveClass = (boolean) => {
     if (boolean) {
@@ -15,8 +18,8 @@ const createFilmCardTemplate = (movie) => {
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${realeseDate}</span>
-        <span class="film-card__duration">1h 55m</span>
+        <span class="film-card__year">${_realeseDate}</span>
+        <span class="film-card__duration">${_runtime}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
       <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
