@@ -55,6 +55,7 @@ const generateDescription = () => {
 
 const generateComment = () => {
   return {
+    id: Math.random(),
     author: `Ilya O'Reilly`,
     text: getRandomElement(CommentText),
     date: `2019-05-11T16:12:32.554Z`,

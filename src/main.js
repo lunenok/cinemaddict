@@ -6,7 +6,7 @@ import MoviesModel from "./models/movie.js";
 import {generateMovies} from "./mock/mock.js";
 import {render, RenderPosition} from "./utils/render.js";
 
-const Movies = generateMovies(15);
+const Movies = generateMovies(10);
 
 const siteHeaderElement = document.querySelector(`header`);
 const siteMainElement = document.querySelector(`.main`);

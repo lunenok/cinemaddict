@@ -45,6 +45,12 @@ export default class MovieController {
     this._setPopUpHandlers(movie);
   }
 
+  _removeExcessCommentsById(comments, id) {
+    return comments.filter((comment) => {
+      return comment.id.toString() !== id.toString();
+    });
+  }
+
   _setCardHandlers(movie) {
     this._filmCardComponent.setFavoriteClickHandler((evt) => {
       evt.preventDefault();
@@ -104,6 +110,14 @@ export default class MovieController {
     this._filmDetailsComponent.setWatchlistClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isToWatch: !movie.isToWatch,
+      }));
+    });
+
+    this._filmDetailsComponent.setDeleteHandler((evt) => {
+      evt.preventDefault();
+      const id = evt.target.id;
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        comments: this._removeExcessCommentsById(movie.comments, id),
       }));
     });
   }
