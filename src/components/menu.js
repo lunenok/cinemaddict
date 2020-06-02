@@ -2,7 +2,6 @@ import AbstarctComponent from "./abstract-component.js";
 import {FilterType} from "./../const.js";
 
 const getFilterNameById = (id) => {
-  // return id.split(` `)[0].toUpperCase();
   return id;
 };
 

@@ -59,11 +59,11 @@ const createAddEmojiMarkup = (emotion) => {
 
 
 const createFilmDetailsTemplate = (movie, emotion) => {
-  const {title, rating, director, writers, actors, realeseDate, realeseCountry, genres, runtime, commentsCount, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
+  const {title, rating, director, writers, actors, realeseDate, realeseCountry, genres, runtime, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
 
   const _writers = writers.join(`, `);
   const _actors = actors.join(`, `);
-
+  const commentsCount = comments.length;
   const _runtime = formatDuration(runtime);
   const _realeseDate = formatDate(realeseDate);
 
@@ -195,6 +195,7 @@ export default class FilmDetails extends SmartAbstractComponent {
     super();
     this._movie = movie;
     this._emotion = ``;
+    this._text = ``;
     this._setCloseButtonClickHandler = null;
     this._setWatchlistClickHandler = null;
     this._setWatchedClickHandler = null;
@@ -253,16 +254,18 @@ export default class FilmDetails extends SmartAbstractComponent {
       this._emotion = evt.target.value;
       this.rerender();
     });
+    element.querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
+      this._text = evt.target.value;
+    });
   }
 
   getComment() {
-    const _text = this.getElement().querySelector(`.film-details__comment-input`).value;
-
     return {
+      movie: this._movie,
       id: Math.random(),
       author: null,
       emotion: this._emotion,
-      text: _text,
+      text: this._text,
       date: new Date()
     };
   }
