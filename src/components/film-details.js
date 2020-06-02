@@ -9,11 +9,11 @@ export const EMOJIS = [
 ];
 
 const createCommentTemplate = (comment) => {
-  const {author, text, date, emotion} = comment;
+  const {id, author, text, date, emotion} = comment;
   const _date = formatCommentDate(date);
 
   return (
-    `<li class="film-details__comment">
+    `<li class="film-details__comment" id=${id}>
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
       </span>
@@ -22,7 +22,7 @@ const createCommentTemplate = (comment) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${_date}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" id=${id}>Delete</button>
         </p>
       </div>
     </li>`
@@ -37,6 +37,9 @@ const getCheckedStatus = (status) => {
 };
 
 const createCommentsTemplate = (comments) => {
+  if (!comments) {
+    return ``;
+  }
   return comments.map((comment) => {
     return createCommentTemplate(comment);
   })
@@ -56,11 +59,11 @@ const createAddEmojiMarkup = (emotion) => {
 
 
 const createFilmDetailsTemplate = (movie, emotion) => {
-  const {title, rating, director, writers, actors, realeseDate, realeseCountry, genres, runtime, commentsCount, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
+  const {title, rating, director, writers, actors, realeseDate, realeseCountry, genres, runtime, description, poster, comments, isFavorite, isWatched, isToWatch} = movie;
 
   const _writers = writers.join(`, `);
   const _actors = actors.join(`, `);
-
+  const commentsCount = comments.length;
   const _runtime = formatDuration(runtime);
   const _realeseDate = formatDate(realeseDate);
 
@@ -192,10 +195,13 @@ export default class FilmDetails extends SmartAbstractComponent {
     super();
     this._movie = movie;
     this._emotion = ``;
+    this._text = ``;
     this._setCloseButtonClickHandler = null;
     this._setWatchlistClickHandler = null;
     this._setWatchedClickHandler = null;
     this._setFavoriteClickHandler = null;
+    this._setDeleteHandler = null;
+    this._setAddCommentHandler = null;
 
     this._handler = handler;
     this._subscribeOnEvents();
@@ -210,6 +216,7 @@ export default class FilmDetails extends SmartAbstractComponent {
     this.setWatchlistClickHandler(this._setWatchlistClickHandler);
     this.setWatchedClickHandler(this._setWatchedClickHandler);
     this.setFavoriteClickHandler(this._setFavoriteClickHandler);
+    this.setDeleteHandler(this._setDeleteHandler);
     this._subscribeOnEvents();
   }
 
@@ -247,6 +254,26 @@ export default class FilmDetails extends SmartAbstractComponent {
       this._emotion = evt.target.value;
       this.rerender();
     });
+    element.querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
+      this._text = evt.target.value;
+    });
+  }
+
+  getComment() {
+    return {
+      movie: this._movie,
+      id: Math.random(),
+      author: null,
+      emotion: this._emotion,
+      text: this._text,
+      date: new Date()
+    };
+  }
+
+  setDeleteHandler(handler) {
+    const element = this.getElement();
+    element.querySelectorAll(`.film-details__comment-delete`).forEach((it) => it.addEventListener(`click`, handler));
+    this._setDeleteHandler = handler;
   }
 
   reset() {

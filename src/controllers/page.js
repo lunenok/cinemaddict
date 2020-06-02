@@ -39,7 +39,7 @@ const getMostCommentedMovies = (movies) => {
 };
 
 const renderMovies = (container, movies, from, to, onDataChange, onViewChange) => {
-  movies.slice(from, to).map((movie) => {
+  return movies.slice(from, to).map((movie) => {
     const movieController = new MovieController(container, onDataChange, onViewChange);
     movieController.render(movie);
 
@@ -48,27 +48,30 @@ const renderMovies = (container, movies, from, to, onDataChange, onViewChange) =
 };
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._filmsListComponent = new FilmsListComponent();
     this._topRatedFilmsListComponent = new TopRatedFilmsListComponent();
     this._mostCommentedFilmsListComponent = new MostCommentedFilmsListComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._sortingComponent = new SortingComponent();
     this._showingMoviesCount = MOVIE_CARD_COUNT;
-    this._movies = [];
+    this._moviesModel = moviesModel;
     this._showedMoviesControllers = [];
     this._filmsContainerElement = this._filmsListComponent.getElement().querySelector(`.films-list__container`);
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._moviesModel.setFilterChangeHandler(this._onFilterChange);
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
 
     this._container = container;
   }
 
-  render(movies) {
-    this._movies = movies;
+  render() {
+    const movies = this._moviesModel.getMovies();
     const container = this._container.getElement();
 
     if (movies.length === 0) {
@@ -86,64 +89,80 @@ export default class PageController {
 
     let showingMoviesCount = MOVIE_CARD_COUNT;
 
-    const newMovies = renderMovies(this._filmsContainerElement, this._movies, 0, showingMoviesCount, this._onDataChange, this._onViewChange);
+    const newMovies = renderMovies(this._filmsContainerElement, movies, 0, showingMoviesCount, this._onDataChange, this._onViewChange);
     this._showedMoviesControllers = this._showedMoviesControllers.concat(newMovies); // не работает
 
     this._renderLoadMoreButton();
 
-    renderMovies(topRatedList, getTopRatedMovies(this._movies), 0, TOP_RATED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
-    renderMovies(mostCommentedList, getMostCommentedMovies(this._movies), 0, MOST_COMMENTED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
+    renderMovies(topRatedList, getTopRatedMovies(movies), 0, TOP_RATED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
+    renderMovies(mostCommentedList, getMostCommentedMovies(movies), 0, MOST_COMMENTED_MOVIE_CARD_COUNT, this._onDataChange, this._onViewChange);
+  }
+
+  _removeMovies() {
+    this._showedMoviesControllers.forEach((movieController) => movieController.destroy());
+    this._showedMoviesControllers = [];
+  }
+
+  _updateMovies(count) {
+    this._removeMovies();
+    const newMovies = renderMovies(this._filmsContainerElement, this._moviesModel.getMovies(), 0, count, this._onDataChange, this._onViewChange);
+    this._showedMoviesControllers = this._showedMoviesControllers.concat(newMovies);
+    this._showingMoviesCount = MOVIE_CARD_COUNT;
+    this._renderLoadMoreButton();
+  }
+
+  _onFilterChange() {
+    this._updateMovies(MOVIE_CARD_COUNT);
+  }
+
+  _onShowMoreButtonClick() {
+    const prevMoviesCount = this._showingMoviesCount;
+    const movies = this._moviesModel.getMovies();
+    this._showingMoviesCount = this._showingMoviesCount + MOVIE_CARD_COUNT;
+
+    const sortedMovies = getSortedMovies(movies, this._sortingComponent.getSortType());
+    const newMovies = renderMovies(this._filmsContainerElement, sortedMovies, prevMoviesCount, this._showingMoviesCount, this._onDataChange, this._onViewChange);
+    this._showedMoviesControllers = this._showedMoviesControllers.concat(newMovies);
+
+    if (this._showingMoviesCount >= movies.length) {
+      remove(this._showMoreButtonComponent);
+    }
   }
 
   _renderLoadMoreButton() {
-    if (this._showingMoviesCount >= this._movies.length) {
+    remove(this._showMoreButtonComponent);
+    const movies = this._moviesModel.getMovies();
+
+    if (this._showingMoviesCount >= movies.length) {
       return;
     }
 
-    remove(this._showMoreButtonComponent);
-
     render(this._filmsListComponent.getElement(), this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-
-    this._showMoreButtonComponent.setClickHandler(() => {
-      const prevMoviesCount = this._showingMoviesCount;
-      this._showingMoviesCount = this._showingMoviesCount + MOVIE_CARD_COUNT;
-
-      const sortedMovies = getSortedMovies(this._movies, this._sortingComponent.getSortType());
-      const newMovies = renderMovies(this._filmsContainerElement, sortedMovies, prevMoviesCount, this._showingMoviesCount, this._onDataChange, this._onViewChange);
-      this._showedMoviesControllers = this._showedMoviesControllers.concat(newMovies); // не работает
-
-      if (this._showingMoviesCount >= this._movies.length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
+    this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
   }
 
   _onSortTypeChange(sortType) {
     this._showingMoviesCount = MOVIE_CARD_COUNT;
-    const sortedMovies = getSortedMovies(this._movies, sortType);
+    const sortedMovies = getSortedMovies(this._moviesModel.getMovies(), sortType);
 
-    this._filmsContainerElement.innerHTML = ``;
+    this._removeMovies();
 
     const newMovies = renderMovies(this._filmsContainerElement, sortedMovies, 0, this._showingMoviesCount, this._onDataChange, this._onViewChange);
-    this._showedMoviesControllers = newMovies; // не работает
+    this._showedMoviesControllers = newMovies;
 
     this._renderLoadMoreButton();
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const index = this._movies.findIndex((it) => it === oldData);
+    const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      movieController.render(newData);
     }
-
-    this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
-
-    movieController.render(this._movies[index]);
   }
 
   _onViewChange() {
-    // this._showedMoviesControllers.forEach((it) => it.setDefaultView); // не работает
+    this._showedMoviesControllers.forEach((it) => it.setDefaultView());
   }
 }

@@ -28,8 +28,8 @@ export default class MovieController {
     const showPopup = () => {
       render(siteMainElement, this._filmDetailsComponent, RenderPosition.BEFOREEND);
       this._setPopUpHandlers(movie);
-      this._mode = Mode.POPUP;
       this._onViewChange();
+      this._mode = Mode.POPUP;
     };
 
     this._filmCardComponent.setPosterClickHandler(showPopup);
@@ -37,12 +37,19 @@ export default class MovieController {
     if (oldFilmCardComponent && oldFilmDetailsComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
+
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     }
 
-    this._setCardHandlers(movie);
     this._setPopUpHandlers(movie);
+    this._setCardHandlers(movie);
+  }
+
+  _removeExcessCommentsById(comments, id) {
+    return comments.filter((comment) => {
+      return comment.id.toString() !== id.toString();
+    });
   }
 
   _setCardHandlers(movie) {
@@ -76,10 +83,27 @@ export default class MovieController {
         this._mode = Mode.DEFAULT;
         remove(this._filmDetailsComponent);
         document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, onCntrlEnterDown);
+      }
+    };
+
+    const onCntrlEnterDown = (evt) => {
+      const isCntrlEnter = (evt.ctrlKey || evt.metaKey) && evt.key === `Enter`;
+
+      if (isCntrlEnter) {
+        const comment = this._filmDetailsComponent.getComment();
+        if (!comment.text) {
+          return;
+        }
+        this._onDataChange(this, movie, Object.assign({}, movie, {
+          comments: movie.comments.concat(comment),
+        }));
+        document.removeEventListener(`keydown`, onCntrlEnterDown);
       }
     };
 
     document.addEventListener(`keydown`, onEscKeyDown);
+    document.addEventListener(`keydown`, onCntrlEnterDown);
 
     const onCloseButtonClick = () => {
       remove(this._filmDetailsComponent);
@@ -106,15 +130,32 @@ export default class MovieController {
         isToWatch: !movie.isToWatch,
       }));
     });
+
+    this._filmDetailsComponent.setDeleteHandler((evt) => {
+      evt.preventDefault();
+      const id = evt.target.id;
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        comments: this._removeExcessCommentsById(movie.comments, id),
+      }));
+    });
+
   }
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this.remove();
+      this._mode = Mode.DEFAULT;
+      remove(this._filmDetailsComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
 
   remove() {
     this._filmCardComponent.getElement().remove();
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 }

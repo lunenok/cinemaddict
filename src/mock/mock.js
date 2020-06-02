@@ -55,6 +55,7 @@ const generateDescription = () => {
 
 const generateComment = () => {
   return {
+    id: Math.random(),
     author: `Ilya O'Reilly`,
     text: getRandomElement(CommentText),
     date: `2019-05-11T16:12:32.554Z`,
@@ -85,6 +86,7 @@ const generateUserDetails = () => {
 const generateMovie = () => {
   const index = getRandomIntegerNumber(0, 6);
   return {
+    id: String(new Date() + Math.random()),
     title: Movies[index],
     poster: Posters[index],
     rating: getRandomIntegerNumber(1, 10),
