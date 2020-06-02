@@ -13,7 +13,6 @@ export default class MovieController {
     this._mode = Mode.DEFAULT;
     this._onViewChange = onViewChange;
     this._onDataChange = onDataChange;
-    // this._ctrlEnterKeyHandler = this._ctrlEnterKeyHandler.bind(this);
 
     this._container = container;
   }
@@ -38,11 +37,12 @@ export default class MovieController {
     if (oldFilmCardComponent && oldFilmDetailsComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
-      this._setPopUpHandlers(movie);
+
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     }
 
+    this._setPopUpHandlers(movie);
     this._setCardHandlers(movie);
   }
 
@@ -83,6 +83,7 @@ export default class MovieController {
         this._mode = Mode.DEFAULT;
         remove(this._filmDetailsComponent);
         document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, onCntrlEnterDown);
       }
     };
 
@@ -91,6 +92,9 @@ export default class MovieController {
 
       if (isCntrlEnter) {
         const comment = this._filmDetailsComponent.getComment();
+        if (!comment.text) {
+          return;
+        }
         this._onDataChange(this, movie, Object.assign({}, movie, {
           comments: movie.comments.concat(comment),
         }));
