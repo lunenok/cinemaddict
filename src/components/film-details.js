@@ -1,5 +1,6 @@
 import SmartAbstractComponent from "./smart-abstract-component.js";
 import {formatDuration, formatDate, formatCommentDate} from "./../utils/common.js";
+import {encode} from "he";
 
 export const EMOJIS = [
   `smile`,
@@ -9,8 +10,9 @@ export const EMOJIS = [
 ];
 
 const createCommentTemplate = (comment) => {
-  const {id, author, text, date, emotion} = comment;
+  const {id, author, text: notSanitizedText, date, emotion} = comment;
   const _date = formatCommentDate(date);
+  const text = encode(notSanitizedText);
 
   return (
     `<li class="film-details__comment" id=${id}>

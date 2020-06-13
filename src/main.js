@@ -3,6 +3,7 @@ import MenuController from "./controllers/filter.js";
 import MainBoardComponent from "./components/main-board.js";
 import PageController from "./controllers/page.js";
 import MoviesModel from "./models/movie.js";
+import Statistic from "./components/statistic";
 import {generateMovies} from "./mock/mock.js";
 import {render, RenderPosition} from "./utils/render.js";
 
@@ -22,3 +23,5 @@ const menuController = new MenuController(siteMainElement, moviesModel);
 menuController.render();
 const pageController = new PageController(mainBoardComponent, moviesModel);
 pageController.render();
+
+render(siteMainElement, new Statistic(), RenderPosition.BEFOREEND);
