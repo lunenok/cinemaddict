@@ -1,9 +1,9 @@
 import AbstarctComponent from "./abstract-component.js";
 import {FilterType} from "./../const.js";
 
-const getFilterNameById = (id) => {
-  return id;
-};
+// const getFilterNameById = (id) => {
+//   return id;
+// };
 
 const createFilterMarkup = (filter) => {
   const {name, count, checked} = filter;
@@ -46,12 +46,24 @@ export default class Menu extends AbstarctComponent {
     return createMenuTemplate(this._filters);
   }
 
+  setOnMenuItemClick(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
+      const choosenMenu = evt.target.id;
+      handler(choosenMenu);
+    });
+  }
+
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       if (evt.target.tagName !== `A`) {
         return;
       }
-      const filterName = getFilterNameById(evt.target.id);
+      // const filterName = getFilterNameById(evt.target.id);
+      const filterName = evt.target.id;
       handler(filterName);
     });
   }

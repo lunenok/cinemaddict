@@ -24,4 +24,8 @@ menuController.render();
 const pageController = new PageController(mainBoardComponent, moviesModel);
 pageController.render();
 
+menuController.setOnMenuItemClick((item) => {
+  console.log(item);
+});
+
 render(siteMainElement, new Statistic(), RenderPosition.BEFOREEND);

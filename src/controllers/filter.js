@@ -13,6 +13,7 @@ export default class FilterController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+    this.setOnMenuItemClick = this.setOnMenuItemClick.bind(this);
 
     this._moviesModel.setDataChangeHandler(this._onDataChange);
   }
@@ -39,6 +40,18 @@ export default class FilterController {
     } else {
       render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
     }
+  }
+
+  setOnMenuItemClick(handler) {
+    this._filterComponent.setOnMenuItemClick(handler);
+  }
+
+  show() {
+    this._container.show();
+  }
+
+  hide() {
+    this._container.hide();
   }
 
   _onFilterChange(filterType) {
