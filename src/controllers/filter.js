@@ -35,6 +35,10 @@ export default class FilterController {
     this._filterComponent = new Menu(filters);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
+    if (this._onMenuItemClick) {
+      this._filterComponent.setOnMenuItemClick(this._onMenuItemClick);
+    }
+
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
@@ -44,6 +48,7 @@ export default class FilterController {
 
   setOnMenuItemClick(handler) {
     this._filterComponent.setOnMenuItemClick(handler);
+    this._onMenuItemClick = handler;
   }
 
   show() {

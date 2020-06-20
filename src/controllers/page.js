@@ -154,6 +154,14 @@ export default class PageController {
     this._renderLoadMoreButton();
   }
 
+  hide() {
+    this._container.hide();
+  }
+
+  show() {
+    this._container.show();
+  }
+
   _onDataChange(movieController, oldData, newData) {
     const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 

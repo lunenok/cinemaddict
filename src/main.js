@@ -23,9 +23,19 @@ const menuController = new MenuController(siteMainElement, moviesModel);
 menuController.render();
 const pageController = new PageController(mainBoardComponent, moviesModel);
 pageController.render();
+const statisticController = new Statistic();
+render(siteMainElement, statisticController, RenderPosition.BEFOREEND);
+
+statisticController.hide();
 
 menuController.setOnMenuItemClick((item) => {
-  console.log(item);
+  if (item === `statisic`) {
+    statisticController.show();
+    pageController.hide();
+  } else {
+    statisticController.hide();
+    pageController.show();
+  }
 });
 
-render(siteMainElement, new Statistic(), RenderPosition.BEFOREEND);
+

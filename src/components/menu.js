@@ -1,10 +1,6 @@
 import AbstarctComponent from "./abstract-component.js";
 import {FilterType} from "./../const.js";
 
-// const getFilterNameById = (id) => {
-//   return id;
-// };
-
 const createFilterMarkup = (filter) => {
   const {name, count, checked} = filter;
 
@@ -31,7 +27,7 @@ export const createMenuTemplate = (filters) => {
       <div class="main-navigation__items">
         ${filtersMarkup}
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+      <a href="#stats" id="statisic" class="main-navigation__additional">Stats</a>
     </nav>`
   );
 };
@@ -62,7 +58,17 @@ export default class Menu extends AbstarctComponent {
       if (evt.target.tagName !== `A`) {
         return;
       }
-      // const filterName = getFilterNameById(evt.target.id);
+
+      const menuItems = document.querySelectorAll(`.main-navigation__item`);
+      // const menuAdditionalItem = document.querySelector(`.main-navigation__additional`);
+
+      if (evt.target.classList.contains(`main-navigation__additional`)) {
+        menuItems.forEach((item) => item.classList.remove(`main-navigation__item--active`));
+        evt.target.classList.add(`main-navigation__item--active`);
+      } else if (evt.target.classList.contains(`main-navigation__item`)) {
+        this.getElement().querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__item--active`);
+      }
+
       const filterName = evt.target.id;
       handler(filterName);
     });
