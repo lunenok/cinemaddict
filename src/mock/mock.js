@@ -71,20 +71,23 @@ const generateComments = (count) => {
   return comments;
 };
 
-const generateUserDetails = () => {
-  const isWatched = getRandomBoolean();
-  const watchDate = isWatched ? generateRandomDate(new Date(2019, 0, 1), new Date()) : null;
+// const generateUserDetails = () => {
+//   const isWatched = getRandomBoolean();
+//   const watchDate = isWatched ? generateRandomDate(new Date(2019, 0, 1), new Date()) : null;
+//   // const watchDate = generateRandomDate(new Date(2019, 0, 1), new Date());
 
-  return {
-    watchlist: getRandomBoolean(),
-    alreadyWatched: isWatched,
-    watchingDate: watchDate,
-    favorite: getRandomBoolean()
-  };
-};
+//   return {
+//     watchlist: getRandomBoolean(),
+//     alreadyWatched: isWatched,
+//     watchingDate: watchDate,
+//     favorite: getRandomBoolean()
+//   };
+// };
 
 const generateMovie = () => {
   const index = getRandomIntegerNumber(0, 6);
+  const isMovieWatched = getRandomBoolean();
+  const watchDate = isMovieWatched ? generateRandomDate(new Date(2019, 0, 1), new Date()) : null;
   return {
     id: String(new Date() + Math.random()),
     title: Movies[index],
@@ -101,9 +104,10 @@ const generateMovie = () => {
     description: generateDescription(),
     commentsCount: 3,
     comments: generateComments(3),
-    userDetails: generateUserDetails(),
+    // userDetails: generateUserDetails(),
     isFavorite: getRandomBoolean(),
-    isWatched: getRandomBoolean(),
+    isWatched: isMovieWatched,
+    watchingDate: watchDate,
     isToWatch: getRandomBoolean()
   };
 };

@@ -8,14 +8,13 @@ import FooterStatisticComponent from "./components/footer";
 import {generateMovies} from "./mock/mock.js";
 import {render, RenderPosition} from "./utils/render.js";
 
-const Movies = generateMovies(15);
+const Movies = generateMovies(100);
 
 const siteHeaderElement = document.querySelector(`header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterStatisticElement = document.querySelector(`.footer__statistics`);
 const mainBoardComponent = new MainBoardComponent();
 const profileComponent = new ProfileComponent();
-
 
 render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, mainBoardComponent, RenderPosition.BEFOREEND);
@@ -26,7 +25,7 @@ const menuController = new MenuController(siteMainElement, moviesModel);
 menuController.render();
 const pageController = new PageController(mainBoardComponent, moviesModel);
 pageController.render();
-const statisticController = new Statistic();
+const statisticController = new Statistic(moviesModel.getAllMovies());
 render(siteMainElement, statisticController, RenderPosition.BEFOREEND);
 const footerStatisticComponent = new FooterStatisticComponent(moviesModel.getAllMovies());
 render(siteFooterStatisticElement, footerStatisticComponent, RenderPosition.BEFOREEND);
