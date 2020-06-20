@@ -113,6 +113,7 @@ export default class PageController {
 
   _onFilterChange() {
     this._updateMovies(MOVIE_CARD_COUNT);
+    this._sortingComponent.rerender();
   }
 
   _onShowMoreButtonClick() {
@@ -145,7 +146,6 @@ export default class PageController {
   _onSortTypeChange(sortType) {
     this._showingMoviesCount = MOVIE_CARD_COUNT;
     const sortedMovies = getSortedMovies(this._moviesModel.getMovies(), sortType);
-
     this._removeMovies();
 
     const newMovies = renderMovies(this._filmsContainerElement, sortedMovies, 0, this._showingMoviesCount, this._onDataChange, this._onViewChange);
