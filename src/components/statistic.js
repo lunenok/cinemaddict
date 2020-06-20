@@ -1,5 +1,7 @@
 import SmartAbstractComponent from "./smart-abstract-component.js";
 import UserRatingComponent from "./user-rating.js";
+import Chart from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from "moment";
 
 const filterNames = [`All time`, `Today`, `Week`, `Month`, `Year`];
@@ -76,6 +78,70 @@ const getMoviesByFilter = (movies, filter) => {
   return movies;
 };
 
+const renderChart = (genresCtx, movies) => {
+  const BAR_HEIGHT = 50;
+  const chartData = getMovieAmountByGenre(movies);
+
+  genresCtx.height = BAR_HEIGHT * chartData.length;
+
+  return new Chart(genresCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: chartData.map((it) => it.genre),
+      datasets: [{
+        data: chartData.map((it) => it.count),
+        backgroundColor: `#ffe800`,
+        hoverBackgroundColor: `#ffe800`,
+        anchor: `start`,
+        barThickness: 24
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20
+          },
+          color: `#ffffff`,
+          anchor: `start`,
+          align: `start`,
+          offset: 40,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#ffffff`,
+            padding: 100,
+            fontSize: 20
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
+      }
+    }
+  });
+};
+
 const createStatisticsTemplate = (movies, filter) => {
   const userRaitingComponent = new UserRatingComponent(movies);
 
@@ -124,6 +190,7 @@ export default class Statistic extends SmartAbstractComponent {
     this._movies = movies;
     this._filter = DEFAULT_FILTER;
     this._onFilterChangre();
+    this._renderChart();
   }
 
   getTemplate() {
@@ -132,6 +199,27 @@ export default class Statistic extends SmartAbstractComponent {
 
   recoveryListeners() {
     this._onFilterChangre();
+  }
+
+  rerender() {
+    super.rerender();
+
+    this._renderChart();
+  }
+
+  _renderChart() {
+    const genresCtx = this.getElement().querySelector(`.statistic__chart`);
+    const movies = getMoviesByFilter(this._movies, this._filter);
+    this._resetChart();
+
+    this._chart = renderChart(genresCtx, movies);
+  }
+
+  _resetChart() {
+    if (this._chart) {
+      this._chart.destroy();
+      this._chart = null;
+    }
   }
 
   _onFilterChangre() {
